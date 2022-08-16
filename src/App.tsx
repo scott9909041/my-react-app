@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { TodoForm } from "./todo-form/TodoForm";
+import { Typography } from "@mui/material";
+import { Todo } from './todo/Todo'
+import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
+import { useGetTodoDetail } from "./middleware/todo-list-middleware";
+import { useTranslation } from "react-i18next";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-wrapper">
+      <BrowserRouter>
+        <Routes>
+          <Route path={"/"} element={<TodoListPage/>}/>
+          <Route path={"/detail/:id"} element={<TodoListDetailPage/>}/>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
+
+const TodoListPage = () => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <Typography variant="h2">{t("addTodoListTitle")}</Typography>
+      <TodoForm />
+      <Typography variant="h2">Show TODO list</Typography>
+      <Todo />
+    </>
+  )
+}
+
+const TodoListDetailPage = () => {
+  const { t } = useTranslation();
+  const params = useParams<{ id: string }>();
+  const { data: detail } = useGetTodoDetail(params.id!);
+  return (
+    <>
+      <Typography variant="h2">{t("todoListDetailTitle", { length: detail?.items.length })}</Typography>
+      <Typography>ID: {params.id}</Typography>
+    </>
+  )
+}
+
 
 export default App;

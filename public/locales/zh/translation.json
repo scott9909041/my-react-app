@@ -1,0 +1,4 @@
+{
+  "addTodoListTitle": "新增TODO",
+  "todoListDetailTitle": "TODO細項: {{length}}個"
+}
